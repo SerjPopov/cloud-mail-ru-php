@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Сласс для работы с облаком https://cloud.mail.ru.
+ * Класс для работы с облаком https://cloud.mail.ru.
  * @author <popov_si@mail.ru>
  * @license GNU GPL v2.0
  */
