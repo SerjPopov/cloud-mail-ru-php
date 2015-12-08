@@ -307,9 +307,9 @@ class CloudMailRu
 
     private static function getTokenFromText($str)
     {
-        $start = strpos($str, '"csrf": "');
+        $start = strpos($str, '"csrf"');
         if ($start > 0) {
-            $start = $start + 9;
+            $start = $start + 8;
             $str_out = substr($str, $start, 32);
             return $str_out;
         } else {
