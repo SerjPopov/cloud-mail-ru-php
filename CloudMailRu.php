@@ -4,6 +4,15 @@
  * @author <popov_si@mail.ru>
  * @license GNU GPL v2.0
  */
+
+if (!function_exists('curl_file_create')) {
+    function curl_file_create($filename, $mimetype = '', $postname = '') {
+        return "@$filename;filename="
+            . ($postname ?: basename($filename))
+            . ($mimetype ? ";type=$mimetype" : '');
+    }
+}
+
 class CloudMailRu
 {
 
