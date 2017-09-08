@@ -4,12 +4,14 @@
  * @author <popov_si@mail.ru>
  * @license GNU GPL v2.0
  */
-
-if (!function_exists('curl_file_create')) {
-    function curl_file_create($filename, $mimetype = '', $postname = '') {
-        return "@$filename;filename="
-            . ($postname ?: basename($filename))
-            . ($mimetype ? ";type=$mimetype" : '');
+if (PHP_VERSION_ID < 50500)
+{
+    if (!function_exists('curl_file_create')) {
+	function curl_file_create($filename, $mimetype = '', $postname = '') {
+    	    return "@$filename;filename="
+        	. ($postname ?: basename($filename))
+        	. ($mimetype ? ";type=$mimetype" : '');
+	}
     }
 }
 
@@ -111,6 +113,54 @@ class CloudMailRu
         }
     }
 
+    function space()
+    {
+
+        $url = 'https://cloud.mail.ru/api/v2/user';
+
+        $post_data = ''
+                . 'api=2'
+                . '&build=' . $this->build
+                . '&email=' . $this->user . '%40' . $this->domain
+                . '&token=' . $this->token
+                . '&x-email=' . $this->user . '%40' . $this->domain
+                . '&x-page-id=' . $this->x_page_id;
+
+        $this->_curl_init($url);
+        $this->_curl_post($post_data);
+        $result = $this->_curl_exec();
+        if ($result !== 'error') {
+            return json_decode($result);
+        } else {
+            return "error";
+        }
+    }
+
+    function trashbin()
+    {
+
+        $url = 'https://cloud.mail.ru/api/v2/trashbin/empty';
+
+        $post_data = ''
+                . 'api=2'
+                . '&build=' . $this->build
+                . '&email=' . $this->user . '%40' . $this->domain
+                . '&token=' . $this->token
+                . '&x-email=' . $this->user . '%40' . $this->domain
+                . '&x-page-id=' . $this->x_page_id;
+
+        $this->_curl_init($url);
+        $this->_curl_post($post_data);
+        $result = $this->_curl_exec();
+        if ($result !== 'error') {
+            return json_decode($result);
+        } else {
+            return "error";
+        }
+    }
+
+
+
     function addDir($dir)
     {
 
@@ -136,6 +186,32 @@ class CloudMailRu
             return "error";
         }
     }
+
+
+    function unpublish($weblink)
+    {
+
+        $url = 'https://cloud.mail.ru/api/v2/file/unpublish';
+
+        $post_data = ''
+                . 'api=2'
+                . '&build=' . $this->build
+                . '&weblink='. $weblink
+                . '&email=' . $this->user . '%40' . $this->domain
+                . '&token=' . $this->token
+                . '&x-email=' . $this->user . '%40' . $this->domain
+                . '&x-page-id=' . $this->x_page_id;
+
+        $this->_curl_init($url);
+        $this->_curl_post($post_data);
+        $result = $this->_curl_exec();
+        if ($result !== 'error') {
+            return json_decode($result);
+        } else {
+            return "error";
+        }
+    }
+
 
     function loadFileAhdPublish($file_name, $dir_cloud)
     {
