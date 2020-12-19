@@ -1,0 +1,20 @@
+{
+    "name": "sergpopov/cloudmailruphp",
+    "type": "library",
+    "description": "Пакет для работы с облаком cloud.mail.ru",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sergey Popov",
+            "email": "popov_si@mail.ru"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "SergPopov\\CloudMailRu\\": "src/"
+        }
+    }
+}
