@@ -40,6 +40,11 @@ try {
 
 [Пример использования example.php](example.php)
 
+## Установка с [Composer](https://getcomposer.org/).
+```bash
+composer require sergpopov/cloudmailruphp
+```
+
 ## Описание изменений
 
 ### 2.0.0
