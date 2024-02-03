@@ -1,12 +1,9 @@
 <?php
 
-
 namespace SergPopov\CloudMailRu;
-
 
 class FolderHelper
 {
-
     /**
      * @param string $str
      * @return array an array describing the contents of the directory
@@ -22,7 +19,7 @@ class FolderHelper
      *  ];
      * @throws CloudMailRuException
      */
-    public static function parseFolderList(string $str)
+    public static function parseFolderList(string $str): array
     {
         $list = json_decode($str)->body->list;
 

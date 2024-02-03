@@ -3,7 +3,6 @@
 namespace SergPopov\CloudMailRu;
 
 use GuzzleHttp\{Client, Cookie\CookieJar, Exception\GuzzleException};
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -12,15 +11,9 @@ use Psr\Http\Message\ResponseInterface;
  */
 class HttpClient
 {
-    /**
-     * @var Client
-     */
-    public $client;
+    public Client $client;
 
-    /**
-     * @var CookieJar
-     */
-    private $cookie;
+    private CookieJar $cookie;
 
     public function __construct()
     {
@@ -35,10 +28,10 @@ class HttpClient
      * @return ResponseInterface
      * @throws CloudMailRuException
      */
-    public function requestPost(string $url, array $postParams, array $headers = [])
+    public function requestPost(string $url, array $postParams, array $headers = []): ResponseInterface
     {
         try {
-            return $response = $this->client->request('POST', $url, [
+            return $this->client->request('POST', $url, [
                 'form_params' => $postParams,
                 'cookies' => $this->cookie,
                 'verify' => false,
@@ -56,10 +49,10 @@ class HttpClient
      * @return ResponseInterface
      * @throws CloudMailRuException
      */
-    public function requestPut(string $url, $body, array $headers = [])
+    public function requestPut(string $url, $body, array $headers = []): ResponseInterface
     {
         try {
-            return $response = $this->client->request('PUT', $url, [
+            return $this->client->request('PUT', $url, [
                 'body' => $body,
                 'cookies' => $this->cookie,
                 'verify' => false,
@@ -76,10 +69,10 @@ class HttpClient
      * @return ResponseInterface
      * @throws CloudMailRuException
      */
-    public function requestGet(string $url, array $headers = [])
+    public function requestGet(string $url, array $headers = []): ResponseInterface
     {
         try {
-            return $response = $this->client->request('GET', $url, [
+            return $this->client->request('GET', $url, [
                 'cookies' => $this->cookie,
                 'verify' => false,
                 'headers' => $headers,
@@ -94,7 +87,7 @@ class HttpClient
      * @return string
      * @throws CloudMailRuException
      */
-    public function checkResponse(ResponseInterface $response)
+    public function checkResponse(ResponseInterface $response): string
     {
         if ($response->getStatusCode() == 200) {
             return $response->getBody()->getContents();
@@ -102,5 +95,4 @@ class HttpClient
             throw new CloudMailRuException('Bad response ' . $response->getStatusCode());
         }
     }
-
 }

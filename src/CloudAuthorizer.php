@@ -1,8 +1,8 @@
 <?php
 
-
 namespace SergPopov\CloudMailRu;
 
+use Exception;
 
 class CloudAuthorizer
 {
@@ -18,14 +18,15 @@ class CloudAuthorizer
     /**
      * CloudAuthorizer constructor.
      * @param string $user
+     * @param string $domain
      * @param string $password
      */
-    public function __construct($user, $password)
+    public function __construct(string $user, string $domain, string $password)
     {
 
         $this->user = $user;
         $this->pass = $password;
-        $this->domain = 'mail.ru';
+        $this->domain = $domain;
         $this->token = '';
         $this->xPageId = '';
         $this->build = '';
@@ -100,7 +101,7 @@ class CloudAuthorizer
     /**
      * @throws CloudMailRuException
      */
-    public function login()
+    public function login(): void
     {
         $this->loginStepOne();
         $this->loginStepTwo();
@@ -110,7 +111,7 @@ class CloudAuthorizer
     /**
      * @throws CloudMailRuException
      */
-    private function loginStepOne()
+    private function loginStepOne(): void
     {
         $url = 'https://auth.mail.ru/cgi-bin/auth?from=splash';
         $params = [
@@ -126,7 +127,7 @@ class CloudAuthorizer
     /**
      * @throws CloudMailRuException
      */
-    private function loginStepTwo()
+    private function loginStepTwo(): void
     {
         $url = 'https://cloud.mail.ru/home';
         $response = $this->httpClient->requestGet($url);
@@ -139,7 +140,7 @@ class CloudAuthorizer
     /**
      * @throws CloudMailRuException
      */
-    private function checkLogin()
+    private function checkLogin(): void
     {
         if ($this->token == '' || $this->xPageId == '' || $this->build == '') {
             throw new CloudMailRuException('Authorization data is not received');
@@ -151,27 +152,32 @@ class CloudAuthorizer
      * @param string $find
      * @return string
      */
-    private static function getValue(string $str, string $find)
+    private static function getValue(string $str, string $find): string
     {
-        $start = strpos($str, '"' . $find . '"');
-        if ($start > 0) {
-            $end = strpos($str, PHP_EOL, $start);
-            $strValue = substr($str, $start, $end - $start);
-            $valuerArr = explode(':', $strValue);
-            $value = $valuerArr[1] ?? '';
-            $value = trim($value);
-            $value = trim($value, ',"');
-            return $value;
-        } else {
+        $pattern = '/"' . $find . '":"(?<value>[\w\-\.]*)"/mu';
+        $matches = [];
+        try {
+            $result = preg_match($pattern, $str, $matches);
+        } catch (Exception $e) {
             return '';
         }
+
+        if ($result === false) {
+            return '';
+        }
+
+        if (isset($matches['value']) === false) {
+            return '';
+        }
+
+        return $matches['value'];
     }
 
     /**
      * @param string $str
      * @return string
      */
-    private static function getXPageIdFromText(string $str)
+    private static function getXPageIdFromText(string $str): string
     {
         return self::getValue($str, 'x-page-id');
     }
@@ -180,7 +186,7 @@ class CloudAuthorizer
      * @param string $str
      * @return string
      */
-    private static function getBuildFromText(string $str)
+    private static function getBuildFromText(string $str): string
     {
         return self::getValue($str, 'BUILD');
     }
@@ -189,9 +195,8 @@ class CloudAuthorizer
      * @param string $str
      * @return string
      */
-    private static function getTokenFromText(string $str)
+    private static function getTokenFromText(string $str): string
     {
         return self::getValue($str, 'csrf');
     }
-
 }

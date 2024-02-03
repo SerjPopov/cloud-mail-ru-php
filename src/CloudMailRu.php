@@ -2,36 +2,27 @@
 
 namespace SergPopov\CloudMailRu;
 
-
 /**
  * Class CloudMailRu.
  * @package SergPopov\CloudMailRu
  */
 class CloudMailRu implements CloudMailRuInterface
 {
-    /**
-     * @var CloudAuthorizer
-     */
-    private $authorizer;
+    private CloudAuthorizer $authorizer;
 
-    /**
-     * @var CloudFolder
-     */
-    private $folder;
+    private CloudFolder $folder;
 
-    /**
-     * @var CloudFile
-     */
-    private $file;
+    private CloudFile $file;
 
     /**
      * CloudMailRu constructor.
      * @param string $user
+     * @param string $domain
      * @param string $password
      */
-    public function __construct(string $user, string $password)
+    public function __construct(string $user, string $domain, string $password)
     {
-        $this->authorizer = new CloudAuthorizer($user, $password);
+        $this->authorizer = new CloudAuthorizer($user, $domain, $password);
         $this->folder = new CloudFolder($this->authorizer);
         $this->file = new CloudFile($this->authorizer);
     }
@@ -42,7 +33,7 @@ class CloudMailRu implements CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function login()
+    public function login(): static
     {
         $this->authorizer->login();
         return $this;
@@ -64,7 +55,7 @@ class CloudMailRu implements CloudMailRuInterface
      *  ];
      * @throws CloudMailRuException
      */
-    public function folderList(string $pathOnCloud)
+    public function folderList(string $pathOnCloud): array
     {
         $responseStr = $this->folder->folderList($pathOnCloud);
         return FolderHelper::parseFolderList($responseStr);
@@ -78,7 +69,7 @@ class CloudMailRu implements CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function folderAdd(string $pathFolderOnCloud)
+    public function folderAdd(string $pathFolderOnCloud): static
     {
         $this->folder->folderAdd($pathFolderOnCloud);
         return $this;
@@ -96,7 +87,7 @@ class CloudMailRu implements CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function fileUpload(string $pathLocalFile, string $pathFileOnCloud)
+    public function fileUpload(string $pathLocalFile, string $pathFileOnCloud): static
     {
         $this->file->fileUpload($pathLocalFile, $pathFileOnCloud);
         return $this;
@@ -109,7 +100,7 @@ class CloudMailRu implements CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function fileRemove(string $pathOnCloud)
+    public function fileRemove(string $pathOnCloud): static
     {
         $this->file->fileRemove($pathOnCloud);
         return $this;
@@ -124,7 +115,7 @@ class CloudMailRu implements CloudMailRuInterface
      * @return string
      * @throws CloudMailRuException
      */
-    public function filePublish(string $pathOnCloud)
+    public function filePublish(string $pathOnCloud): string
     {
         return $this->file->filePublish($pathOnCloud);
     }

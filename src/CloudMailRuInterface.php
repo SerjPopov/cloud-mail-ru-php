@@ -10,7 +10,7 @@ interface CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function login();
+    public function login(): CloudMailRu;
 
     /**
      * Getting a list of directories and files in a specified directory.
@@ -28,7 +28,7 @@ interface CloudMailRuInterface
      *  ];
      * @throws CloudMailRuException
      */
-    public function folderList(string $pathOnCloud);
+    public function folderList(string $pathOnCloud): array;
 
     /**
      * Adding a directory to the cloud.
@@ -38,7 +38,7 @@ interface CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function folderAdd(string $pathFolderOnCloud);
+    public function folderAdd(string $pathFolderOnCloud): CloudMailRu;
 
     /**
      * Uploading a file to the cloud.
@@ -52,7 +52,7 @@ interface CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function fileUpload(string $pathLocalFile, string $pathFileOnCloud);
+    public function fileUpload(string $pathLocalFile, string $pathFileOnCloud): CloudMailRu;
 
     /**
      * Deleting a file from the cloud.
@@ -61,7 +61,7 @@ interface CloudMailRuInterface
      * @return CloudMailRu
      * @throws CloudMailRuException
      */
-    public function fileRemove(string $pathOnCloud);
+    public function fileRemove(string $pathOnCloud): CloudMailRu;
 
     /**
      * Obtaining a public link for downloading a file by any unauthorized user.
@@ -71,5 +71,5 @@ interface CloudMailRuInterface
      * @return string
      * @throws CloudMailRuException
      */
-    public function filePublish(string $pathOnCloud);
+    public function filePublish(string $pathOnCloud): string;
 }
