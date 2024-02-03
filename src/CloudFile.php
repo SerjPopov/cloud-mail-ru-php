@@ -8,10 +8,7 @@ namespace SergPopov\CloudMailRu;
  */
 class CloudFile
 {
-    /**
-     * @var CloudAuthorizer
-     */
-    private $authorizer;
+    private CloudAuthorizer $authorizer;
 
     /**
      * CloudFile constructor.
@@ -23,8 +20,8 @@ class CloudFile
     }
 
     /**
-     * @param $pathLocalFile
-     * @param $pathFileOnCloud
+     * @param string $pathLocalFile
+     * @param string $pathFileOnCloud
      * @throws CloudMailRuException
      */
     public function fileUpload(string $pathLocalFile, string $pathFileOnCloud)

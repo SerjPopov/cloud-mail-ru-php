@@ -5,10 +5,11 @@ require('vendor/autoload.php');
 use SergPopov\CloudMailRu\CloudMailRu;
 use SergPopov\CloudMailRu\CloudMailRuException;
 
-$username = 'username'; // учетная запись username@mail.ru
+$username = 'username'; // учетная запись username
+$domain = 'mail.ru';
 $password = 'password';
 
-$cloud = new CloudMailRu($username, $password);
+$cloud = new CloudMailRu($username, $domain, $password);
 
 try {
     $list = $cloud->login()->folderList('/');
@@ -21,7 +22,7 @@ $pathLocalFile = __DIR__.'/testfile.txt';
 $pathFileOnCloud = '/testdir/testfile.txt';
 try {
     $url = $cloud->login()
-        ->fileRemove($pathLocalFile)
+        ->fileRemove($pathFileOnCloud)
         ->fileUpload($pathLocalFile, $pathFileOnCloud)
         ->filePublish($pathFileOnCloud);
     var_dump($url);
